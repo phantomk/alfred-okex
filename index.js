@@ -9,14 +9,15 @@ const symbol_plist = [
 ];
 
 try {
-  // TODO: 添加输入延迟处理
   if (symbol_plist.indexOf(symbol) < 0) {
+    return;
+  } else if (symbol.length > 4) {
     throw new Error('未发现交易对')
   }
 
   const ws = new WebSocket('wss://okexcomreal.bafang.com:10440/ws/v1');
   ws.on('open', () => {
-    ws.send(`{"channel":"ok_sub_futureusd_${symbol}_ticker_this_week","event":"addChannel"}`)
+    ws.send(`{"channel":"ok_sub_futureusd_${symbol}_ticker_quarter","event":"addChannel"}`)
   })
 
   let cnt = 0;
@@ -33,7 +34,8 @@ try {
           title: `${symbol} 季度交割合约`,
           subtitle: `最新价: ${data.last} 最高价: ${data.high} 最低价: ${data.low} 交易量: ${data.vol}`,
           arg: data.vol,
-          text: '季度'
+          text: '季度',
+          quicklookurl: 'https://www.okex.com/future/trade#2_4'
         }];
 
         cnt += 1;
